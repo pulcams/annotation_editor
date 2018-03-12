@@ -1,0 +1,368 @@
+<?xml-stylesheet href="http://libserv6-dev.princeton.edu/basex/static/xsltforms/build/xsltforms.xsl" type="text/xsl"?>
+<?xsltforms-options debug="no"?>
+<?css-conversion no?>
+<?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" 
+    schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:oa="http://www.w3.org/ns/oa#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:space="preserve">
+    <head>
+        <title>Annotation Editor</title>
+         <!-- Latest compiled and minified JavaScript -->
+         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+            
+        <!-- Optional theme -->
+        <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+
+        <link rel="stylesheet" href="http://libserv6-dev.princeton.edu/basex/static/editor/css/anno_editor.css" />
+       
+        <xf:model id="anno-model">
+			<!-- instances ================================================ -->
+            <xf:instance id="Annotation" xmlns="">
+                <data>
+                    <div typeof="oa:Annotation" about="">
+                        <div rel="dcterms:creator">
+                            <div typeof="foaf:Person" about="">
+                                <div property="foaf:name" content=""></div>
+                            </div>
+                        </div>
+                        <div rel="dcterms:contributor">
+                            <div typeof="foaf:Person" about="">
+                                <div property="foaf:name" content=""></div>
+                            </div>
+                        </div>
+                        <div rel="oa:hasTarget" resource=""></div>
+                        <div rel="oa:hasBody">
+                            <div typeof="oa:TextualBody">
+                                <div property="dc:language" content="fr"></div>
+                                <div property="dc:format" content="text/plain"></div>
+                                <div property="oa:text" content=""></div>
+                            </div>
+                        </div>
+                        <div rel="oa:motivatedBy"
+                            resource="http://example.org/dedicating"></div>
+                    </div>
+                </data>
+            </xf:instance>
+            <xf:instance id="text">
+                <data xmlns=""></data>
+            </xf:instance>
+            <xf:instance id="anno">
+                <data xmlns=""></data>
+            </xf:instance>
+            <xf:instance id="selector">
+                <data xmlns="">
+                    <selection annotation="">
+                        <prefix selected="false"></prefix>
+                        <exact selected="false"></exact>
+                        <suffix selected="false"></suffix>
+                        <target-type>person</target-type>
+                        <is-dedicator selected="false"></is-dedicator>
+                        <formatted id="selector"></formatted>
+                    </selection>                    
+                </data>
+            </xf:instance>
+            <xf:instance id="info">
+                <data xmlns="">
+                    <info annotation="">
+                        <naf></naf>
+                        <viaf></viaf>
+                        <name></name>
+                        <idloc></idloc>
+                        <title></title>
+                        <date></date>
+                        <place></place>
+                        <link></link>
+                        <names></names>
+                        <text></text>
+                        <ocn></ocn>
+                        <bib></bib>
+                        <owi></owi>
+                        <formatted id="info"></formatted>
+                    </info>
+                </data>
+            </xf:instance>
+            <xf:instance id="edits">
+				<data xmlns="">
+					<edits>
+						<anno></anno>
+						<formatted id="edits"></formatted>
+					</edits>
+				</data>
+            </xf:instance>
+            
+            <!-- submissions ==============================================-->
+            <xf:submission id="annotation" method="get" replace="text"
+                targetref="instance('text')" serialization="none">
+                <xf:resource value="concat('/annotation/', instance('anno'))"
+                ></xf:resource>
+            </xf:submission>
+
+            <xf:submission id="get-info" method="get" replace="instance" instance="info"
+                targetref="instance('info')/info">
+                <xf:resource value="concat('/info/', instance('anno'))"
+                ></xf:resource>
+            </xf:submission>
+               
+            <xf:submission id="send-selection" method="post" resource="/selection"
+                ref="instance('selector')/selection" replace="text"
+                targetref="instance('selector')/selection/formatted"></xf:submission>
+
+            <xf:submission id="send-addition" method="post" resource="/addition"
+                ref="instance('selector')/selection" targetref="instance('info')/info/formatted" replace="text" ></xf:submission> 
+         
+           <xf:submission id="send-edits"  method="post" resource="/edit" 
+                 ref="instance('info')/info" targetref="instance('info')/info/formatted" replace="none">
+           </xf:submission>
+          
+           <!-- bindings ==================================================-->
+            <xf:bind id="target-type"
+                ref="instance('selector')/selection/target-type"
+                relevant="true()"></xf:bind>
+
+            <xf:bind id="create-date"
+                ref="instance('selector')/selection/date"
+                relevant="true()"></xf:bind>
+
+            <xf:bind id="exact-selection" ref="instance('selector')/selection/exact/@selected" type="xs:boolean" value="1"/>
+
+            <xf:bind id="prefix-selection" ref="instance('selector')/selection/prefix/@selected" type="xs:boolean" readonly="boolean-from-string(instance('selector')/selection/exact/@selected) = false()"/>
+
+            <xf:bind id="suffix-selection" ref="instance('selector')/selection/suffix/@selected" type="xs:boolean" readonly="boolean-from-string(instance('selector')/selection/exact/@selected) = false() or boolean-from-string(instance('selector')/selection/prefix/@selected) = false()"/>
+            <!--=============================================================-->
+        </xf:model>
+        <script>
+			$(document).ready(function(){
+				$("p#toggle").click(function(){
+					$("div#displayinfo").slideToggle('fast');
+				});
+			});
+
+			$(document).ready(function(){
+				$("p#helpers").click(function(){
+					$("div#helper-list").slideToggle('fast');
+				});
+			});
+			
+			$(document).ready(function(){
+				$('span#exact-match > span > span.value > span.xforms-value').addClass('hi');
+			});
+
+			$(document).ready(function(){
+			$("#load-btn > span.value > button[type=button]").click(function(){
+			    $("#textbox-container").removeClass("hide").addClass("show");
+			});
+			});
+
+			$(document).ready(function(){
+			$("#clear-btn > span.value > button[type=button]").click(function(){
+			    $("#textbox-container").removeClass("show").addClass("hide");
+			});
+			});
+        </script>
+    </head>
+    <body>        
+        <div id="wrapper">   
+            <xf:group id="wrapper-group">         
+            <xf:group id="load" ref="instance('anno')">
+                <div class="header">
+				   <a href="https://library.princeton.edu/tsd/cams/ld4p/" target="_BLANK"><img src="http://libserv6-dev.princeton.edu/basex/static/img/ld4p_lightgray_shadow.png" alt="logo" width="40px" height="40px" style="float:right; margin:0 20px 0 0;"/></a>
+                   <h1>Annotation Editor <span class="tiny-text">"from strings to things"</span></h1>
+                </div>
+                <p id="helpers">Show/hide reminders</p>                
+				<div id="helper-list" style="display:none;">
+				<ul>
+					<li><a target="_BLANK" href="https://docs.google.com/a/princeton.edu/document/d/1516Kiy9h-_uTwUweMLKXHEadeCPggaOk2uohWxOqb6A/edit?usp=sharing">How-To</a></li>
+					<li><a href="https://docs.google.com/a/princeton.edu/spreadsheets/d/1eyrG93syUXUtwjFPaH9GZqLSsTXBiyenDXx0DBclRpU/edit?usp=sharing" target="_BLANK">List of IDs (450)</a></li>
+					<li><a href="https://docs.google.com/document/d/1vMjN3bugupIjbWf2yN5b6PCo4GXQ__TMHNMKy-t8Pck/edit" target="_BLANK">Broader Issues</a></li>
+					<li><a href="https://www.w3.org/TR/annotation-model/" target="_BLANK">Web Annotations data model</a></li>
+					<li><a href="http://www.loc.gov/bibframe/docs/bibframe2-model.html" target="_BLANK">BIBFRAME 2.0 model</a></li>
+					<li><a href="http://libserv6-dev.princeton.edu/basex/static/img/anno1.svg" target="_BLANK">Our basic model (static)</a> <a href="http://libserv6-dev.princeton.edu/basex/static/anno/basic.html" target="_BLANK">(interactive)</a></li>
+					<li><a href="http://libserv6-dev.princeton.edu/basex/static/img/hypocrite_page.svg" target="_BLANK">Our hypocrite example (diagram)</a> <a href="http://libserv6-dev.princeton.edu/basex/static/anno/hypocrite.html" target="_BLANK">(graph)</a></li>
+					<li><a href="http://ttl.summerofcode.be/" target="_BLANK">Turtle validator</a></li>
+					<li><a href="https://github.com/PrincetonUniversity/ld4p/tree/master/annotation_editor" target="_BLANK">Code for this thing</a></li>
+				</ul>
+                </div>
+                <xf:var name="id" value="."></xf:var>
+                    <xf:input id="id-textbox" ref="." style="width:50px;padding-left:5px;margin-left:5px;">
+                        <xf:label id="load-label">ID:</xf:label>
+                    </xf:input>
+                    <xf:trigger id="load-btn">
+                        <xf:label>Retrieve Data</xf:label>
+                        <xf:action ev:event="DOMActivate">
+							<xf:setvalue ref="instance('text')" value="''"/>
+                            <xf:send if="instance('anno') != ''" submission="annotation"/>
+                            <xf:setvalue ref="instance('selector')/selection/@annotation" value="$id"> </xf:setvalue>
+                            <xf:setvalue ref="instance('info')/formatted/@annotation" value="$id"></xf:setvalue>
+                            <xf:setvalue ref="instance('info')/info/ib" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/link" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/names" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/title" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/formatted" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/owi" value="''"/>
+                            <xf:setvalue ref="instance('info')/info/viaf" value="''"/>
+                            <xf:setvalue ref="instance('selector')/selection/viaf" value="''"/>
+							<xf:setvalue ref="instance('selector')/selection/exact/" value="''"/>
+							<xf:setvalue ref="instance('selector')/selection/prefix/" value="''"/>
+							<xf:setvalue ref="instance('selector')/selection/suffix/" value="''"/>
+							<xf:setvalue ref="instance('selector')/selection/is-dedicator" value="''"/>
+                            <xf:send if="instance('anno') != ''" submission="get-info"/>
+                        </xf:action>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+            <xf:group id="anno-group" class="xforms-enabled" ref="instance('text')/text()[normalize-space(.)]"> 
+                <hr style="border:none; border-top:1px dashed #999;color:#fff;height:1px;"/>
+                <p id="toggle">Show/hide metadata</p>
+					<div id="displayinfo" style="display:none">
+						<div style="float:left;display:block;margin-right:10px;">Finding Aid:</div>
+	                    <a id="link-output" href="http://findingaids.princeton.edu/collections/RBD1.1/{normalize-space(instance('info')/info/link)}" target="_blank">
+	                        <xf:output value="concat('http://findingaids.princeton.edu/collections/RBD1.1/', normalize-space(instance('info')/info/link))"></xf:output>
+	                    </a>
+						<xf:group ref=".[instance('info')/info/bib != '']">
+	                    <div style="float:left;display:block;margin-right:10px;">Voyager BIB:</div>
+	                    <a id="bib-output" href="https://pulsearch.princeton.edu/catalog/{normalize-space(instance('info')/info/bib)}/staff_view" target="_blank">
+	                        <xf:output value="concat('https://pulsearch.princeton.edu/catalog/', normalize-space(instance('info')/info/bib))"></xf:output>
+	                    </a>
+	                    </xf:group>
+	                    <xf:group ref=".[instance('info')/info/ocn != '']">
+	                    <div style="float:left;display:block;margin-right:10px;">OCLC:</div>
+	                    <a id="ocn-output" href="http://www.worldcat.org/oclc/{normalize-space(instance('info')/info/ocn)}" target="_blank">
+	                        <xf:output value="concat('http://www.worldcat.org/oclc/', normalize-space(instance('info')/info/ocn))"></xf:output>
+	                    </a>
+	                    </xf:group>
+	                    <xf:group ref=".[instance('info')/info/owi != '']">
+	                     <div style="float:left;display:block;margin-right:10px;">OWI:</div>
+	                        <a id="owi-output" href="{instance('info')/info/owi}" target="_blank">
+	                            <xf:output value="instance('info')/info/owi"></xf:output>
+	                        </a>
+	                    </xf:group>
+	                    <xf:output id="title-output" ref="instance('info')/info/title">
+							<xf:label>Title: </xf:label>
+						</xf:output>
+	                    <xf:output id="name-output" ref="instance('info')/info/names">
+	                        <xf:label>Name (from ead): </xf:label>
+	                    </xf:output>
+	                    <xf:output id="naf-output" ref="instance('info')/info/naf">
+	                        <xf:label>Authorized Name:	</xf:label>
+	                    </xf:output>
+	                    <xf:group ref="instance('info')/info/idloc[not(contains(.,' /'))]">
+	                    <a id="idloc-output" style="display:block;margin:0 10px 0 25px;" href="{normalize-space(instance('info')/info/idloc)}" target="_blank">
+	                        <xf:output value="instance('info')/info/idloc"></xf:output>
+	                    </a>
+	                    </xf:group>
+	                     <xf:group ref=".[contains(instance('info')/info/idloc,' /')]">
+	                    <xf:output  style="display:block;margin:0 10px 0 25px;" value="instance('info')/info/idloc"></xf:output>
+	                    </xf:group>
+	                     <xf:group ref="instance('info')/info/viaf[not(contains(.,' /'))]">
+	                    <a id="viaf-output" style="display:block;margin:0 10px 0 25px;" href="{normalize-space(instance('info')/info/viaf)}" target="_blank">
+	                        <xf:output value="instance('info')/info/viaf"></xf:output>
+	                    </a>
+	                    </xf:group>
+	                      <xf:group ref=".[contains(instance('info')/info/viaf,' /')]">
+	                    <xf:output  style="display:block;margin:0 10px 0 25px;" value="instance('info')/info/viaf"></xf:output>
+	                    </xf:group>
+	                    <xf:output id="vendor-output" ref="instance('info')/info/vendornote">
+	                        <xf:label>Vendor note: </xf:label>
+	                    </xf:output>
+	                     <hr/>
+                    </div> 
+                 <a id="ib-output" href="http://diglib.princeton.edu/tools/ib/pudl0142/{normalize-space(instance('info')/info/imageid)}" target="_blank"><img src="http://libserv6-dev.princeton.edu/basex/static/img/dedication_scribbles.png" alt="img" height="50px" width="50px" title="open digital image" style="box-shadow: 5px 5px 2px #d3d3d3;"></img></a>
+                <xf:textarea id="anno-body" ref="." incremental="true">
+                    <xf:action ev:event="select" 
+                        if="boolean-from-string(instance('selector')/selection/exact/@selected) = true()
+                            and boolean-from-string(instance('selector')/selection/prefix/@selected) = false()
+                            and boolean-from-string(instance('selector')/selection/suffix/@selected) = false()
+                        ">
+                        <xf:setvalue ref="instance('selector')/selection/exact" value="selection('anno-body')"/>
+                        <xf:setvalue ref="instance('selector')/selection/prefix" value="substring(substring-before(instance('text')/text()[normalize-space(.)],instance('selector')/selection/exact),string-length(substring-before(instance('text')/text()[normalize-space(.)],instance('selector')/selection/exact)) - 12,13)"/>
+                        <xf:setvalue ref="instance('selector')/selection/suffix" value="substring(substring-after(instance('text')/text()[normalize-space(.)],instance('selector')/selection/exact),1,12)"/>
+                        <xf:setvalue if="instance('info')/info/viaf != ''" ref="instance('selector')/selection/viaf" value="concat('&lt;',normalize-space(instance('info')/info/viaf),'&gt;')"/>
+                        <xf:setvalue ref="instance('selector')/selection/name" value="instance('info')/info/names"/>
+                        <xf:setvalue ref="instance('selector')/selection/title" value="normalize-space(instance('info')/info/title)"/>
+                        <xf:setvalue ref="instance('selector')/selection/text" value="instance('text')/text()[normalize-space(.)]"/>                                
+                       </xf:action>
+                </xf:textarea>
+                <table class="table-condensed">
+				<tr>
+				<td style="width:60%;border:1px solid #ccc; border-right:none;">
+	            <xf:group id="selection-output">
+	                <xf:output value="concat('&quot;',instance('selector')/selection/prefix,'&quot;')">
+	                    <xf:label>Prefix: </xf:label>
+	                </xf:output>
+	                <span>Exact:"<span id="exact-match">
+	                 <xf:output value="instance('selector')/selection/exact" style="display:inline;">
+	                </xf:output></span>"</span>
+	                <xf:output value="concat('&quot;',instance('selector')/selection/suffix,'&quot;')">
+	                    <xf:label>Suffix: </xf:label>
+	                </xf:output>
+	            </xf:group>
+	            </td>
+	            <td style="border:1px solid #ccc; border-right:none;border-left:none;" width="80px;">
+	            <xf:select1 ref="instance('selector')/selection/target-type" appearance="full">
+			    <xf:item>
+			        <xf:label>Person</xf:label>
+			        <xf:value>person</xf:value>
+			    </xf:item>
+			    <xf:item>
+			        <xf:label>Place</xf:label>
+			        <xf:value>place</xf:value>
+			    </xf:item>
+			    </xf:select1>
+	            </td>
+	            <td style="border:2px dotted #ccc; border-left:none; width:100px;">
+				<xf:group ref=".[instance('info')/info/viaf != '']">
+				 <xf:select ref="instance('selector')/selection/is-dedicator" incremental="true" appearance="full">
+					<xf:item>
+						<xf:label>Dedicator</xf:label>
+						<xf:value value="instance('info')/info/viaf"/>
+					</xf:item>
+                </xf:select>
+                </xf:group>
+	            </td>
+	            </tr>
+	            </table>
+	            <div class="numberCircle">1</div>
+	             <xf:trigger id="add-btn">
+	                <xf:label>add anno</xf:label>
+	                <xf:action ev:event="DOMActivate">
+	                    <xf:send submission="send-addition">
+						</xf:send>
+	                </xf:action>
+	            </xf:trigger>
+                <div class="numberCircle">2</div>
+		        <span style="margin:0 15px 0 5px;">manually edit</span>
+		        <div class="numberCircle">3</div>
+				
+                <xf:submit submission="send-edits" id="save-btn">
+                    <xf:label>save edits</xf:label>
+                </xf:submit>
+
+                <div class="numberCircle">4</div>
+                <xf:submit id="clear-btn" submission="send-edits" >
+						<xf:label>close</xf:label>
+						<xf:reset ev:event="DOMActivate"/>
+				    </xf:submit>
+                <a href="http://libserv6-dev.princeton.edu/basex/static/anno/{normalize-space(instance('info')/info/@annotation)}.html" target="_blank"><span title="Visualize" class="glyphicon glyphicon-eye-open"></span></a>
+            </xf:group>
+            <div id="textbox-container" class="hide">
+            <xf:group id="selector-box-file" ref="instance('info')/info/formatted">
+                <xf:textarea id="anno-selector-file" ref=".[. != '']" targetref="instance('info')/info/formatted" incremental="true"></xf:textarea>
+            </xf:group>
+            </div>
+        </div>
+    </body>
+</html>

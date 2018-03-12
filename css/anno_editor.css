@@ -1,0 +1,113 @@
+#wrapper{
+	width: 80%;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #FFF;
+}
+ #wrapper-group{
+	 width:80%;
+ }
+p#toggle, p#helpers {
+	color:#999;
+}
+.xforms-output{
+	margin:0 0 0 0;
+}
+
+.xforms-label, .xforms-item-label {
+	font-weight:normal;
+	margin:0 0 0 0;    
+}
+input[type=text]{
+	width: 20%;   
+}
+textarea{
+	font-family: Courier, sans-serif;
+	font-size:.85em;
+	height: 4.4em;
+	display:block;
+	width: 80%;
+	color:#333;
+	margin: 10px 0 10px 0;
+	background-color: #F8F8F8;
+}
+h5 {
+	color:#999;
+}
+button {
+	margin: 10px 10px 10px 5px;
+}
+.table-condensed > tbody > tr > td {
+	vertical-align: top;
+	background-color:#e7efe7; /* #def3e1; */
+}
+.numberCircle {
+	border-radius: 50%;
+	display:inline-block;	
+	width: 24px;
+	height: 24px;
+	padding: 1px;
+	background: #fff;
+	border: 2px solid #666;
+	color: #666;
+	text-align: center;
+	font: 14px Arial, sans-serif;
+}
+.lime {
+	background-color:lime;
+}
+.gray {
+	background-color:#cccccc;
+}
+.hi {
+	background-color:yellow;
+}
+.red {
+	color:red;
+}
+.hide {
+	dispalay:none;
+}
+.show {
+	dispalay:block;
+}
+.tiny-text {
+	font-size:.4em;
+	color:#666;
+}
+ #anno-body textarea {
+	width: 75%;
+	font-size:1.1em;
+	background-color: #F8F8F8;
+}
+#anno-group img {
+	border:1px solid #999;
+}
+#selector-box textarea, #selector-box-file textarea{
+	font-family:"Courier New", Courier, monospace;
+	width: 80%;
+	height: 575px;         
+}
+#link-output, #title-output, #name-output {
+   display:block;
+   position:relative;
+}
+#ib-output {
+	display:block;
+	float:left;
+	margin:0 10px 0 0;
+}
+#link-group, #title-group, #name-group{
+   
+}
+#top-group, #anno-group{
+   
+}
+#selection-output, .xforms-output{
+	display:block;
+	
+}
+#anno-selector-file {
+	font-size:1.1em;
+}
