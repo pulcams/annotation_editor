@@ -193,7 +193,7 @@
 					<li><a href="http://libserv6-dev.princeton.edu/basex/static/img/anno1.svg" target="_BLANK">Our basic model (static)</a> <a href="http://libserv6-dev.princeton.edu/basex/static/anno/basic.html" target="_BLANK">(interactive)</a></li>
 					<li><a href="http://libserv6-dev.princeton.edu/basex/static/img/hypocrite_page.svg" target="_BLANK">Our hypocrite example (diagram)</a> <a href="http://libserv6-dev.princeton.edu/basex/static/anno/hypocrite.html" target="_BLANK">(graph)</a></li>
 					<li><a href="http://ttl.summerofcode.be/" target="_BLANK">Turtle validator</a></li>
-					<li><a href="https://github.com/PrincetonUniversity/ld4p/tree/master/annotation_editor" target="_BLANK">Code for this thing</a></li>
+					<li><a href="https://github.com/pulcams/annotation_editor" target="_BLANK">Code for this thing</a></li>
 				</ul>
                 </div>
                 <xf:var name="id" value="."></xf:var>
